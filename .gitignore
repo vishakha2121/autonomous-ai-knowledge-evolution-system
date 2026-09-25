@@ -451,3 +451,1180 @@ backend/venv/
 frontend/node_modules/
 frontend/dist/
 backend/data/app.db
+# 🚀 Autonomous AI Knowledge Evolution System
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python" />
+  <img src="https://img.shields.io/badge/FastAPI-0.110-green?style=for-the-badge&logo=fastapi" />
+  <img src="https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react" />
+  <img src="https://img.shields.io/badge/Neo4j-GraphDB-008CC1?style=for-the-badge&logo=neo4j" />
+  <img src="https://img.shields.io/badge/Gemini-AI-orange?style=for-the-badge&logo=google" />
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" />
+</p>
+
+<p align="center">
+  <b>A self-evolving AI system that monitors enterprise knowledge, updates knowledge graphs, retrains retrieval pipelines, and maintains reasoning consistency — autonomously.</b>
+</p>
+
+---
+
+## 📖 Table of Contents
+
+1. [Introduction](#-introduction)
+2. [Problem Statement](#-problem-statement)
+3. [Solution Overview](#-solution-overview)
+4. [Key Features](#-key-features)
+5. [System Architecture](#-system-architecture)
+6. [Tech Stack](#-tech-stack)
+7. [Project Structure](#-project-structure)
+8. [How It Works](#-how-it-works)
+9. [Installation Guide](#-installation-guide)
+10. [Environment Variables](#-environment-variables)
+11. [API Endpoints](#-api-endpoints)
+12. [Database Schema](#-database-schema)
+13. [Demo Walkthrough](#-demo-walkthrough)
+14. [Screenshots](#-screenshots)
+15. [Use Cases](#-use-cases)
+16. [Roadmap](#-roadmap)
+17. [Challenges Solved](#-challenges-solved)
+18. [Learning Outcomes](#-learning-outcomes)
+19. [Contributing](#-contributing)
+20. [License](#-license)
+21. [Author](#-author)
+
+---
+
+## 🌟 Introduction
+
+Enterprise knowledge is **never static**. Policies change, documents get updated, new research arrives daily. Traditional RAG (Retrieval-Augmented Generation) systems become **stale the moment** their knowledge base changes, leading to:
+
+- ❌ Outdated answers
+- ❌ Contradictory reasoning
+- ❌ Broken knowledge graphs
+- ❌ Manual re-indexing overhead
+
+**Autonomous AI Knowledge Evolution System** solves this by building a **self-evolving AI pipeline** that:
+
+- 👁️ Monitors knowledge sources in **real-time**
+- 🔄 Automatically **updates the knowledge graph**
+- 🧬 **Retrains retrieval** with fresh embeddings
+- ✅ **Maintains reasoning consistency** across all answers
+
+This project demonstrates a **production-grade GraphRAG architecture** with event-driven evolution — but optimized to run on a **CPU-only laptop** using Google Gemini's free API.
+
+---
+
+## ❗ Problem Statement
+
+Modern enterprises face a critical challenge:
+
+> **"How do we keep AI systems aligned with rapidly changing knowledge — without manual intervention?"**
+
+### The 4 Core Problems:
+
+| # | Problem | Impact |
+|---|---------|--------|
+| 1 | **Stale Knowledge** | AI answers based on old documents |
+| 2 | **Manual Re-indexing** | Engineers must re-run embedding jobs |
+| 3 | **Graph Inconsistency** | Knowledge graph diverges from source docs |
+| 4 | **Reasoning Drift** | Same question yields different answers over time |
+
+### Existing Solutions Fall Short:
+
+- **Traditional RAG** → Static, no evolution
+- **Fine-tuning** → Slow, expensive, not real-time
+- **Manual pipelines** → Error-prone, not autonomous
+- **Graph DB alone** → No semantic retrieval
+
+---
+
+## 💡 Solution Overview
+
+This system introduces an **autonomous feedback loop**:
+
+```
+Knowledge Source Change
+        ↓
+[Detection Layer]  → File watcher + hash diffing
+        ↓
+[Event Layer]      → Redis pub/sub stream
+        ↓
+[Evolution Layer]  → Graph update + Re-embedding
+        ↓
+[Retrieval Layer]  → Hybrid GraphRAG search
+        ↓
+[Consistency Layer] → Reasoning verification
+        ↓
+Updated, Consistent, Fresh Knowledge ✅
+```
+
+Every layer is **decoupled**, **event-driven**, and **autonomous**.
+
+---
+
+## ✨ Key Features
+
+### 🎯 Core Capabilities
+
+| Feature | Description |
+|---------|-------------|
+| **Real-Time Monitoring** | Watchdog-based file watcher tracks all knowledge sources |
+| **Change Detection** | SHA-256 hashing identifies modified/added/deleted docs |
+| **Autonomous Graph Evolution** | Gemini extracts entities & relations, Neo4j updates graph |
+| **Incremental Re-Embedding** | Only changed chunks re-embedded (efficient) |
+| **Hybrid GraphRAG Retrieval** | Vector search (ChromaDB) + Graph traversal (Neo4j) |
+| **Reasoning Consistency Guard** | Detects contradictions & verifies answer stability |
+| **Event Streaming** | Redis pub/sub broadcasts all evolution events |
+| **Live Dashboard** | React UI with real-time updates |
+| **Interactive Graph Viz** | Force-directed knowledge graph visualization |
+| **Event Timeline** | Full audit trail of every system evolution |
+
+### 🎨 UI Features
+
+- 🌙 Dark mode with glassmorphism
+- 📊 Live stat cards & charts
+- 🕸️ Interactive graph (drag, zoom, click nodes)
+- 💬 Chat interface for RAG queries
+- ⚡ Real-time event feed
+- 🔔 Toast notifications
+- 📱 Fully responsive design
+
+### ⚙️ Technical Features
+
+- ✅ CPU-only (no GPU required)
+- ✅ Free tier friendly (Gemini API)
+- ✅ Async FastAPI backend
+- ✅ Modular service architecture
+- ✅ RESTful API with OpenAPI docs
+- ✅ SQLite / PostgreSQL flexible
+- ✅ Docker support for Neo4j + Redis
+
+---
+
+## 🏗️ System Architecture
+
+### High-Level Architecture
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                     KNOWLEDGE SOURCES                        │
+│    (PDFs, DOCX, TXT, Markdown, Live Feeds, APIs)             │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│                    MONITORING LAYER                          │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐        │
+│  │ File Watcher │  │ Hash Diffing │  │ API Poller   │        │
+│  │  (Watchdog)  │  │  (SHA-256)   │  │  (Optional)  │        │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘        │
+└─────────┼─────────────────┼─────────────────┼────────────────┘
+          │                 │                 │
+          └─────────────────┴─────────────────┘
+                            │
+                            ▼
+┌──────────────────────────────────────────────────────────────┐
+│                     EVENT STREAM LAYER                       │
+│              Redis Pub/Sub  |  Event Queue                   │
+│  Events: DOC_ADDED, DOC_UPDATED, DOC_DELETED, EVOLUTION_DONE │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│                    EVOLUTION WORKER                          │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  1. Parse Document (PDF/DOCX/TXT)                      │  │
+│  │  2. Chunk Text (semantic chunking)                     │  │
+│  │  3. Extract Entities (Gemini API)                      │  │
+│  │  4. Extract Relations (Gemini API)                     │  │
+│  │  5. Update Neo4j Graph                                 │  │
+│  │  6. Generate Embeddings (Gemini)                       │  │
+│  │  7. Update ChromaDB Index                              │  │
+│  │  8. Log Evolution Event                                │  │
+│  └────────────────────────────────────────────────────────┘  │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│                   STORAGE LAYER                              │
+│  ┌────────────┐  ┌────────────┐  ┌────────────────────────┐  │
+│  │  Neo4j     │  │  ChromaDB  │  │  SQLite / PostgreSQL   │  │
+│  │ (Graph DB) │  │ (Vectors)  │  │  (Metadata + Events)   │  │
+│  └────────────┘  └────────────┘  └────────────────────────┘  │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│                   RETRIEVAL LAYER (GraphRAG)                 │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  Query → Embed → Vector Search → Graph Expand → Rank   │  │
+│  └────────────────────────────────────────────────────────┘  │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│                  CONSISTENCY LAYER                           │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  Verify Answer → Detect Contradictions → Log Trace     │  │
+│  └────────────────────────────────────────────────────────┘  │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│                    FRONTEND (React)                          │
+│  Dashboard | Documents | Graph | Chat | Evolution | Events   │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Data Flow Diagram
+
+```
+User Uploads Document
+        │
+        ▼
+[FastAPI] /api/documents/upload
+        │
+        ▼
+[Parser] → Extract text → Chunk → Hash
+        │
+        ▼
+[SQL DB] Store metadata
+        │
+        ▼
+[Event Bus] Publish: DOC_ADDED
+        │
+        ▼
+[Worker] Picks up event
+        │
+        ├──▶ [Gemini] Extract entities
+        ├──▶ [Gemini] Extract relations
+        ├──▶ [Gemini] Generate embeddings
+        │
+        ▼
+[Neo4j] Insert nodes + edges
+[ChromaDB] Insert vectors
+        │
+        ▼
+[Event Bus] Publish: EVOLUTION_COMPLETE
+        │
+        ▼
+[Frontend] WebSocket/SSE → Live update
+```
+
+---
+
+## 🛠️ Tech Stack
+
+### Backend Stack
+
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| Language | Python 3.11 | Core backend |
+| Framework | FastAPI | REST API + async |
+| ASGI Server | Uvicorn | Production server |
+| Graph DB | Neo4j | Knowledge graph storage |
+| Vector DB | ChromaDB | Embedding storage |
+| Metadata DB | SQLite / PostgreSQL | Documents, events, logs |
+| Event Bus | Redis Pub/Sub | Async event streaming |
+| File Watcher | Watchdog | Real-time file monitoring |
+| Scheduler | APScheduler | Periodic tasks |
+| LLM | Google Gemini 1.5 Flash | Entity extraction + reasoning |
+| Embeddings | Gemini Embedding API | Text embeddings |
+| Validation | Pydantic v2 | Schema validation |
+| ORM | SQLAlchemy 2.0 | DB operations |
+| Migrations | Alembic | Schema versioning |
+| Testing | Pytest | Unit + integration tests |
+
+### Frontend Stack
+
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| Framework | React 18 | UI library |
+| Build Tool | Vite | Fast dev server |
+| Styling | TailwindCSS | Utility CSS |
+| Routing | React Router v6 | Page navigation |
+| HTTP Client | Axios | API calls |
+| Charts | Recharts | Analytics visuals |
+| Graph Viz | react-force-graph | KG visualization |
+| Icons | Lucide React | Modern icons |
+| Notifications | React Hot Toast | Toast messages |
+| State | React Context + Hooks | Global state |
+| Animations | Framer Motion | Smooth transitions |
+
+### DevOps & Tools
+
+| Tool | Purpose |
+|------|---------|
+| Docker | Neo4j + Redis containers |
+| Docker Compose | Multi-container orchestration |
+| Git | Version control |
+| Postman / Thunder Client | API testing |
+| Neo4j Browser | Graph inspection |
+| Redis CLI | Event debugging |
+
+---
+
+## 📁 Project Structure
+
+```
+autonomous-ai-knowledge-evolution-system/
+│
+├── README.md
+├── LICENSE
+├── .gitignore
+├── .env.example
+├── docker-compose.yml
+│
+├── backend/
+│   ├── requirements.txt
+│   ├── main.py
+│   ├── config.py
+│   ├── .env
+│   │
+│   ├── app/
+│   │   ├── __init__.py
+│   │   │
+│   │   ├── api/
+│   │   │   ├── __init__.py
+│   │   │   ├── dependencies.py
+│   │   │   └── routes/
+│   │   │       ├── __init__.py
+│   │   │       ├── health.py
+│   │   │       ├── documents.py
+│   │   │       ├── knowledge_graph.py
+│   │   │       ├── retrieval.py
+│   │   │       ├── evolution.py
+│   │   │       ├── consistency.py
+│   │   │       ├── events.py
+│   │   │       └── dashboard.py
+│   │   │
+│   │   ├── core/
+│   │   │   ├── __init__.py
+│   │   │   ├── config.py
+│   │   │   ├── logging.py
+│   │   │   ├── exceptions.py
+│   │   │   └── security.py
+│   │   │
+│   │   ├── models/
+│   │   │   ├── __init__.py
+│   │   │   ├── document.py
+│   │   │   ├── knowledge_node.py
+│   │   │   ├── event_log.py
+│   │   │   ├── retrieval_index.py
+│   │   │   └── consistency_check.py
+│   │   │
+│   │   ├── schemas/
+│   │   │   ├── __init__.py
+│   │   │   ├── document_schema.py
+│   │   │   ├── kg_schema.py
+│   │   │   ├── retrieval_schema.py
+│   │   │   ├── evolution_schema.py
+│   │   │   ├── consistency_schema.py
+│   │   │   └── event_schema.py
+│   │   │
+│   │   ├── services/
+│   │   │   ├── __init__.py
+│   │   │   ├── document_service.py
+│   │   │   ├── graph_service.py
+│   │   │   ├── embedding_service.py
+│   │   │   ├── retrieval_service.py
+│   │   │   ├── evolution_service.py
+│   │   │   ├── consistency_service.py
+│   │   │   ├── event_service.py
+│   │   │   └── gemini_service.py
+│   │   │
+│   │   ├── graph/
+│   │   │   ├── __init__.py
+│   │   │   ├── neo4j_client.py
+│   │   │   ├── graph_builder.py
+│   │   │   ├── entity_extractor.py
+│   │   │   ├── relation_extractor.py
+│   │   │   ├── graph_queries.py
+│   │   │   └── graph_rag.py
+│   │   │
+│   │   ├── vectorstore/
+│   │   │   ├── __init__.py
+│   │   │   ├── chroma_client.py
+│   │   │   ├── indexer.py
+│   │   │   └── retriever.py
+│   │   │
+│   │   ├── streaming/
+│   │   │   ├── __init__.py
+│   │   │   ├── redis_pubsub.py
+│   │   │   ├── event_producer.py
+│   │   │   ├── event_consumer.py
+│   │   │   └── event_types.py
+│   │   │
+│   │   ├── watchers/
+│   │   │   ├── __init__.py
+│   │   │   ├── file_watcher.py
+│   │   │   └── change_detector.py
+│   │   │
+│   │   ├── workers/
+│   │   │   ├── __init__.py
+│   │   │   ├── evolution_worker.py
+│   │   │   ├── consistency_worker.py
+│   │   │   └── scheduler.py
+│   │   │
+│   │   ├── db/
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py
+│   │   │   ├── session.py
+│   │   │   └── init_db.py
+│   │   │
+│   │   └── utils/
+│   │       ├── __init__.py
+│   │       ├── text_chunker.py
+│   │       ├── file_parser.py
+│   │       ├── hash_utils.py
+│   │       └── helpers.py
+│   │
+│   ├── data/
+│   │   ├── uploads/
+│   │   ├── chroma_db/
+│   │   └── logs/
+│   │
+│   ├── scripts/
+│   │   ├── seed_data.py
+│   │   ├── build_graph.py
+│   │   ├── reset_db.py
+│   │   └── test_pipeline.py
+│   │
+│   └── tests/
+│       ├── __init__.py
+│       ├── conftest.py
+│       ├── test_api/
+│       │   ├── test_documents.py
+│       │   ├── test_graph.py
+│       │   └── test_retrieval.py
+│       └── test_services/
+│           ├── test_evolution.py
+│           └── test_consistency.py
+│
+├── frontend/
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── tailwind.config.js
+│   ├── postcss.config.js
+│   ├── index.html
+│   ├── .env
+│   │
+│   └── src/
+│       ├── main.jsx
+│       ├── App.jsx
+│       ├── index.css
+│       │
+│       ├── api/
+│       │   ├── axiosClient.js
+│       │   ├── documentsApi.js
+│       │   ├── graphApi.js
+│       │   ├── retrievalApi.js
+│       │   ├── evolutionApi.js
+│       │   ├── consistencyApi.js
+│       │   └── dashboardApi.js
+│       │
+│       ├── components/
+│       │   ├── layout/
+│       │   │   ├── Sidebar.jsx
+│       │   │   ├── Navbar.jsx
+│       │   │   └── Layout.jsx
+│       │   ├── common/
+│       │   │   ├── Button.jsx
+│       │   │   ├── Card.jsx
+│       │   │   ├── Loader.jsx
+│       │   │   ├── Modal.jsx
+│       │   │   ├── Toast.jsx
+│       │   │   ├── Badge.jsx
+│       │   │   └── EmptyState.jsx
+│       │   ├── dashboard/
+│       │   │   ├── StatsCard.jsx
+│       │   │   ├── EvolutionTimeline.jsx
+│       │   │   ├── EventFeed.jsx
+│       │   │   └── ConsistencyGauge.jsx
+│       │   ├── documents/
+│       │   │   ├── DocumentUploader.jsx
+│       │   │   ├── DocumentList.jsx
+│       │   │   └── DocumentCard.jsx
+│       │   ├── graph/
+│       │   │   ├── GraphVisualizer.jsx
+│       │   │   ├── NodeDetails.jsx
+│       │   │   └── GraphControls.jsx
+│       │   ├── retrieval/
+│       │   │   ├── SearchBar.jsx
+│       │   │   ├── ChatInterface.jsx
+│       │   │   ├── AnswerCard.jsx
+│       │   │   └── SourceList.jsx
+│       │   └── consistency/
+│       │       ├── ConsistencyChecker.jsx
+│       │       └── ReasoningTrace.jsx
+│       │
+│       ├── pages/
+│       │   ├── Dashboard.jsx
+│       │   ├── Documents.jsx
+│       │   ├── KnowledgeGraph.jsx
+│       │   ├── Retrieval.jsx
+│       │   ├── Evolution.jsx
+│       │   ├── Consistency.jsx
+│       │   ├── Events.jsx
+│       │   └── Settings.jsx
+│       │
+│       ├── hooks/
+│       │   ├── useDocuments.js
+│       │   ├── useGraph.js
+│       │   ├── useRetrieval.js
+│       │   ├── useEvolution.js
+│       │   ├── useEvents.js
+│       │   └── useToast.js
+│       │
+│       ├── context/
+│       │   ├── AppContext.jsx
+│       │   └── ThemeContext.jsx
+│       │
+│       ├── utils/
+│       │   ├── formatters.js
+│       │   ├── constants.js
+│       │   └── validators.js
+│       │
+│       └── assets/
+│           ├── logo.svg
+│           └── icons/
+│
+├── database/
+│   ├── schema.sql
+│   ├── seed.sql
+│   └── migrations/
+│       ├── 001_initial.sql
+│       └── 002_add_consistency.sql
+│
+├── docs/
+│   ├── ARCHITECTURE.md
+│   ├── API_REFERENCE.md
+│   ├── SETUP_GUIDE.md
+│   ├── DEMO_SCRIPT.md
+│   └── diagrams/
+│       ├── architecture.png
+│       ├── flow.png
+│       └── data_model.png
+│
+└── scripts/
+    ├── setup.sh
+    ├── start_backend.sh
+    ├── start_frontend.sh
+    └── start_all.sh
+```
+
+---
+
+## 🔄 How It Works
+
+### Step-by-Step Workflow
+
+#### 1️⃣ **Document Ingestion**
+
+User uploads a document via React UI → hits `/api/documents/upload`.
+
+```python
+# Pseudocode
+file → parser → text → chunk (500 tokens) → hash (SHA-256) → store in SQL DB
+```
+
+#### 2️⃣ **Change Detection**
+
+Watchdog monitors the `data/uploads/` folder. Any file change triggers:
+
+```python
+old_hash != new_hash → emit EVENT: DOC_UPDATED
+```
+
+#### 3️⃣ **Event Publishing**
+
+Events published to Redis channel:
+
+```
+Channel: knowledge_events
+Payload: { "type": "DOC_UPDATED", "doc_id": "abc123", "timestamp": "..." }
+```
+
+#### 4️⃣ **Evolution Worker**
+
+Subscribes to Redis, processes each event:
+
+```python
+1. Fetch document
+2. Chunk text
+3. Extract entities → Gemini
+4. Extract relations → Gemini
+5. Update Neo4j (MERGE nodes/edges)
+6. Generate embeddings → Gemini
+7. Upsert vectors → ChromaDB
+8. Log to SQL DB
+9. Publish EVENT: EVOLUTION_COMPLETE
+```
+
+#### 5️⃣ **GraphRAG Retrieval**
+
+When user asks a question:
+
+```python
+1. Embed query → Gemini
+2. Vector search → ChromaDB (top-K chunks)
+3. Extract entities from query → Gemini
+4. Graph traversal → Neo4j (neighbors of matched entities)
+5. Merge contexts (vector + graph)
+6. Rank by relevance
+7. Send to Gemini LLM → answer
+8. Return answer + sources
+```
+
+#### 6️⃣ **Consistency Verification**
+
+After each answer:
+
+```python
+1. Fetch previous answers to same/similar question
+2. Compare via Gemini (semantic diff)
+3. Flag contradictions
+4. Log reasoning trace to SQL DB
+```
+
+#### 7️⃣ **Live Dashboard**
+
+Frontend subscribes to `/api/events/stream` (SSE) → receives real-time updates.
+
+---
+
+## 🚀 Installation Guide
+
+### Prerequisites
+
+- Python 3.11+
+- Node.js 18+
+- Docker (for Neo4j + Redis)
+- Google Gemini API Key ([get here](https://aistudio.google.com/app/apikey))
+- Git
+
+### Step 1: Clone Repository
+
+```bash
+git clone https://github.com/vishakha2121/autonomous-ai-knowledge-evolution-system.git
+cd autonomous-ai-knowledge-evolution-system
+```
+
+### Step 2: Backend Setup
+
+```bash
+cd backend
+
+# Create virtual environment
+python -m venv venv
+
+# Activate
+# Windows:
+venv\Scripts\activate
+# Mac/Linux:
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Copy env file
+copy .env.example .env   # Windows
+cp .env.example .env     # Mac/Linux
+```
+
+Edit `.env` and add your **Gemini API Key**.
+
+### Step 3: Start Neo4j + Redis (Docker)
+
+```bash
+docker-compose up -d
+```
+
+Verify:
+- Neo4j Browser: `http://localhost:7474` (user: `neo4j`, pass: `password`)
+- Redis: `localhost:6379`
+
+### Step 4: Initialize Database
+
+```bash
+python -m app.db.init_db
+python scripts/seed_data.py
+```
+
+### Step 5: Run Backend
+
+```bash
+uvicorn main:app --reload --port 8000
+```
+
+API docs: `http://localhost:8000/docs`
+
+### Step 6: Frontend Setup
+
+```bash
+cd ../frontend
+npm install
+npm run dev
+```
+
+Frontend: `http://localhost:5173`
+
+---
+
+## 🔐 Environment Variables
+
+### Backend `.env`
+
+```env
+# Gemini API
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-1.5-flash
+GEMINI_EMBEDDING_MODEL=models/embedding-001
+
+# Neo4j
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=password
+
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_CHANNEL=knowledge_events
+
+# SQL Database
+DATABASE_URL=sqlite:///./data/app.db
+
+# ChromaDB
+CHROMA_PERSIST_DIR=./data/chroma_db
+CHROMA_COLLECTION=knowledge_chunks
+
+# App
+APP_ENV=development
+LOG_LEVEL=INFO
+UPLOAD_DIR=./data/uploads
+MAX_FILE_SIZE_MB=50
+CHUNK_SIZE=500
+CHUNK_OVERLAP=50
+TOP_K_RESULTS=5
+```
+
+### Frontend `.env`
+
+```env
+VITE_API_BASE_URL=http://localhost:8000/api
+VITE_WS_URL=ws://localhost:8000/ws
+```
+
+---
+
+## 🔌 API Endpoints
+
+### Health
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/health` | Service health check |
+| GET | `/` | Root info |
+
+### Documents
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/documents/upload` | Upload new document |
+| GET | `/api/documents/` | List all documents |
+| GET | `/api/documents/{id}` | Get document details |
+| DELETE | `/api/documents/{id}` | Delete document |
+
+### Knowledge Graph
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/kg/nodes` | List all nodes |
+| GET | `/api/kg/edges` | List all edges |
+| GET | `/api/kg/graph` | Full graph (for viz) |
+| GET | `/api/kg/node/{id}` | Node details + neighbors |
+| POST | `/api/kg/query` | Custom Cypher query |
+
+### Retrieval
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/retrieval/search` | Semantic search |
+| POST | `/api/retrieval/ask` | GraphRAG Q&A |
+| GET | `/api/retrieval/history` | Past queries |
+
+### Evolution
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/evolution/trigger` | Manually trigger evolution |
+| GET | `/api/evolution/history` | Evolution timeline |
+| GET | `/api/evolution/status` | Current pipeline status |
+
+### Consistency
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/consistency/check` | Verify answer consistency |
+| GET | `/api/consistency/history` | Past checks |
+| GET | `/api/consistency/contradictions` | Detected contradictions |
+
+### Events
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/events/` | List all events |
+| GET | `/api/events/stream` | SSE live stream |
+
+### Dashboard
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/dashboard/stats` | Overview statistics |
+| GET | `/api/dashboard/charts` | Chart data |
+
+---
+
+## 🗄️ Database Schema
+
+### `documents` Table
+
+```sql
+CREATE TABLE documents (
+    id VARCHAR(36) PRIMARY KEY,
+    filename VARCHAR(255) NOT NULL,
+    file_path VARCHAR(500) NOT NULL,
+    file_hash VARCHAR(64) NOT NULL,
+    file_size INTEGER,
+    mime_type VARCHAR(100),
+    content TEXT,
+    status VARCHAR(50) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### `knowledge_nodes` Table
+
+```sql
+CREATE TABLE knowledge_nodes (
+    id VARCHAR(36) PRIMARY KEY,
+    neo4j_id VARCHAR(100),
+    node_type VARCHAR(50),
+    name VARCHAR(255),
+    properties JSON,
+    source_doc_id VARCHAR(36),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### `event_logs` Table
+
+```sql
+CREATE TABLE event_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_type VARCHAR(50) NOT NULL,
+    payload JSON,
+    source VARCHAR(100),
+    status VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### `retrieval_index` Table
+
+```sql
+CREATE TABLE retrieval_index (
+    id VARCHAR(36) PRIMARY KEY,
+    doc_id VARCHAR(36),
+    chunk_text TEXT,
+    chunk_index INTEGER,
+    embedding_id VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### `consistency_checks` Table
+
+```sql
+CREATE TABLE consistency_checks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    query TEXT,
+    answer_old TEXT,
+    answer_new TEXT,
+    is_consistent BOOLEAN,
+    contradiction_details JSON,
+    checked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### Neo4j Graph Model
+
+```cypher
+// Nodes
+(:Entity {id, name, type, source_doc})
+(:Document {id, filename, hash})
+(:Chunk {id, text, doc_id})
+
+// Relations
+(:Entity)-[:RELATED_TO {type, confidence}]->(:Entity)
+(:Document)-[:CONTAINS]->(:Chunk)
+(:Chunk)-[:MENTIONS]->(:Entity)
+```
+
+---
+
+## 🎬 Demo Walkthrough
+
+### Scenario: HR Policy Update
+
+**Step 1: Upload Initial Document**
+```
+Upload: employee_handbook_v1.pdf
+Content: "Employees get 20 days annual leave."
+```
+
+**Step 2: System Processes**
+- ✅ Entities extracted: `Employee`, `Annual Leave`, `20 days`
+- ✅ Graph updated with nodes + edges
+- ✅ Embeddings stored
+- ✅ Evolution event logged
+
+**Step 3: Ask Question**
+```
+Q: "How many annual leave days do employees get?"
+A: "Employees get 20 days annual leave per year."
+Sources: [employee_handbook_v1.pdf, Chunk #12]
+```
+
+**Step 4: Update Document**
+```
+Upload: employee_handbook_v2.pdf
+Content: "Employees get 25 days annual leave."
+```
+
+**Step 5: Autonomous Evolution**
+- 🔍 File watcher detects change
+- 📢 Event: DOC_UPDATED published
+- 🤖 Evolution worker:
+  - Extracts new entities
+  - Updates graph (20 → 25)
+  - Regenerates embeddings
+  - Logs evolution
+
+**Step 6: Ask Same Question**
+```
+Q: "How many annual leave days do employees get?"
+A: "Employees get 25 days annual leave per year."
+Sources: [employee_handbook_v2.pdf, Chunk #12]
+Reasoning Consistency: ✅ Verified (old answer outdated, evolution logged)
+```
+
+**Step 7: Dashboard Shows**
+- Timeline: "Document updated → Graph evolved → Embeddings refreshed"
+- Event feed: Live updates
+- Consistency check passed
+
+---
+
+## 📸 Screenshots
+
+### Dashboard
+![Dashboard](docs/diagrams/dashboard.png)
+*Live stats, evolution timeline, event feed*
+
+### Knowledge Graph
+![Knowledge Graph](docs/diagrams/graph.png)
+*Interactive force-directed graph*
+
+### Chat Interface
+![Chat](docs/diagrams/chat.png)
+*GraphRAG-powered Q&A with sources*
+
+### Evolution Timeline
+![Evolution](docs/diagrams/evolution.png)
+*Full audit trail of changes*
+
+### Consistency Checker
+![Consistency](docs/diagrams/consistency.png)
+*Reasoning verification*
+
+---
+
+## 🎯 Use Cases
+
+### 1. 🏢 Enterprise Knowledge Base
+Auto-updating internal wikis and policy documents. AI always gives current answers.
+
+### 2. 📚 Research Assistant
+Self-evolving literature graphs. New papers auto-integrated.
+
+### 3. 🏥 Healthcare Compliance
+Track policy changes across hospital guidelines in real-time.
+
+### 4. ⚖️ Legal Document Evolution
+Monitor contract changes, flag contradictions.
+
+### 5. 🎓 Adaptive Education
+Curriculum that evolves with new standards.
+
+### 6. 🤖 Enterprise Chatbot
+Always-fresh Q&A over internal docs.
+
+### 7. 📰 News Intelligence
+Real-time event graph from news feeds.
+
+---
+
+## 🛣️ Roadmap
+
+### ✅ Completed
+- [x] FastAPI backend with modular architecture
+- [x] Document upload + parsing (PDF, DOCX, TXT, MD)
+- [x] Gemini-based entity & relation extraction
+- [x] Neo4j knowledge graph
+- [x] ChromaDB vector store
+- [x] GraphRAG hybrid retrieval
+- [x] Redis event streaming
+- [x] File watcher for change detection
+- [x] Evolution worker pipeline
+- [x] Consistency checker
+- [x] React + Tailwind dashboard
+- [x] Interactive graph visualization
+- [x] Real-time event feed
+
+### 🚧 In Progress
+- [ ] WebSocket support (currently SSE)
+- [ ] Multi-tenant isolation
+- [ ] Advanced caching
+
+### 🔮 Future Enhancements
+- [ ] Kafka for high-scale streaming
+- [ ] Fine-tuned domain-specific models
+- [ ] Kubernetes deployment
+- [ ] Role-based access control
+- [ ] Slack/Teams integration
+- [ ] Mobile app
+- [ ] Multilingual support
+
+---
+
+## 🧩 Challenges Solved
+
+### 1. **CPU-Only Constraint**
+**Challenge:** No GPU available for embeddings/LLM.  
+**Solution:** Used Gemini API for both LLM and embeddings. ChromaDB runs efficiently on CPU.
+
+### 2. **Incremental Graph Updates**
+**Challenge:** Full rebuild is expensive.  
+**Solution:** `MERGE` Cypher queries + change detection = only update deltas.
+
+### 3. **Consistency Across Evolutions**
+**Challenge:** How to detect contradictions between old & new answers?  
+**Solution:** Store all past answers, use Gemini for semantic diffing.
+
+### 4. **Real-Time Feedback**
+**Challenge:** How to push updates to UI without polling?  
+**Solution:** Server-Sent Events (SSE) for live event stream.
+
+### 5. **Hybrid Retrieval Ranking**
+**Challenge:** Combining vector + graph results.  
+**Solution:** Weighted scoring — vector similarity (0.6) + graph proximity (0.4).
+
+### 6. **Free-Tier API Limits**
+**Challenge:** Gemini API rate limits.  
+**Solution:** Batching, caching, retry logic with exponential backoff.
+
+---
+
+## 🎓 Learning Outcomes
+
+By building this project, I mastered:
+
+- 🧠 **GraphRAG architecture** — combining vector + graph retrieval
+- 🔄 **Event-driven systems** — Redis pub/sub patterns
+- 🤖 **LLM integration** — Gemini API for extraction, reasoning, embeddings
+- 🕸️ **Neo4j Cypher queries** — MERGE, MATCH, path traversal
+- 🧬 **Vector databases** — ChromaDB indexing & search
+- 🐍 **Async Python** — FastAPI + asyncio
+- ⚛️ **Modern React** — hooks, context, real-time UI
+- 🎨 **TailwindCSS design** — glassmorphism, dark mode
+- 📡 **Streaming APIs** — SSE for live updates
+- 🐳 **Docker Compose** — multi-service orchestration
+- 📊 **Data visualization** — force-directed graphs, charts
+
+---
+
+## 🤝 Contributing
+
+Contributions welcome! 
+
+```bash
+# Fork the repo
+# Create your feature branch
+git checkout -b feature/AmazingFeature
+
+# Commit changes
+git commit -m "Add AmazingFeature"
+
+# Push to branch
+git push origin feature/AmazingFeature
+
+# Open a Pull Request
+```
+
+### Guidelines
+- Follow PEP 8 for Python
+- Use ESLint + Prettier for JS
+- Write tests for new features
+- Update README if needed
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License** — see [LICENSE](LICENSE) file for details.
+
+You are free to:
+- ✅ Use commercially
+- ✅ Modify
+- ✅ Distribute
+- ✅ Private use
+
+---
+
+## 👨‍💻 Author
+
+**Vishakha**
+- GitHub: [@vishakha2121](https://github.com/vishakha2121)
+- Repo: [autonomous-ai-knowledge-evolution-system](https://github.com/vishakha2121/autonomous-ai-knowledge-evolution-system)
+
+---
+
+## 🙏 Acknowledgements
+
+Special thanks to:
+
+- **Google Gemini** — Free LLM & embedding API
+- **Neo4j** — Powerful graph database
+- **ChromaDB** — Simple, fast vector store
+- **FastAPI** — Elegant async framework
+- **React & Tailwind** — Beautiful UI tools
+- **Open Source Community** ❤️
+
+---
+
+## 📞 Support
+
+If you have questions or issues:
+
+- 🐛 Open an [Issue](https://github.com/vishakha2121/autonomous-ai-knowledge-evolution-system/issues)
+- 💬 Start a [Discussion](https://github.com/vishakha2121/autonomous-ai-knowledge-evolution-system/discussions)
+- ⭐ Star the repo if you find it useful!
+
+---
+
+<p align="center">
+  <b>Built with ❤️ to demonstrate autonomous AI systems</b><br>
+  <i>⭐ Star this repo if you learned something new! ⭐</i>
+</p>
